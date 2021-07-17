@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from "styled-components";
@@ -18,19 +18,23 @@ const Message = (props) => {
         const comment = textArea.current.value;
         dispatch(userCommentd(comment));
         dispatch(saveUserData(userName, userScore, comment));
-        console.log(userName);
-        console.log(userScore);
-        console.log(comment);
-        console.log(userAllData);
+        
         props.history.push('/ranking');
     }
-
+    useEffect(() => {
+        console.log(userName);
+        console.log(userScore);
+        console.log(userAllData);
+        
+        return () => {
+        }
+    }, [userAllData])
     return (
         <Container>
             <img src={img}></img>
             <form>
                 <Text><MyName>{myName}</MyName>에게 남기는 한 마디</Text>
-                <Textarea ref={textArea} rows="10" cols="40" placeholder="재완이에게 하고 싶은 말을 남겨주세요."></Textarea>
+                <Textarea ref={textArea} rows="10" cols="40" placeholder="ABlue에게 하고 싶은 말을 남겨주세요."></Textarea>
                 <Button onClick={onSubmitEvent}>랭킹보기</Button>
             </form>
 

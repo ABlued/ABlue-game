@@ -97,15 +97,4 @@ const PointButton = styled.button`
     margin: 30px 0px 5px 0px;
     cursor: pointer;
 `;
-
-const RangKingButton = styled.button`
-    border: none;
-    border: solid #009FFF 1px;
-    background: white;
-    color: #009FFF;
-    padding: 5px 100px 5px 100px;
-    border-radius: 30px;
-    margin: 5px;
-    cursor: pointer;
-`;
 export default Score

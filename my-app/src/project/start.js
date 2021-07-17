@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import img from './img.jpg'
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
@@ -13,11 +13,17 @@ const Start = () => {
     const dispatch = useDispatch();
     const span__style = {background:'#FBD786', padding:'10px' ,borderRadius:'25px'}
     const input__style = {background:'rgba(180, 179, 181, 0.169)',
-                border:'none', borderRadius:'25px', padding:'20px', width:'350px',
+                border:'none', borderRadius:'25px', padding:'20px', width:'300px',
                 marginTop:'50px', outline:'none', fontSize:'20px'};
     const button__style = {padding:'10px 30px 10px 30px', border:'none',
                     borderRadius:'30px', marginTop:'50px', background:'#009FFF',
                     color:'white', cursor:'pointer'};
+
+    useEffect(() => {
+        console.log(userName);
+        return () => {
+        }
+    }, [userName])
 
     const onSubmitEvent = (e) => {
         e.preventDefault();

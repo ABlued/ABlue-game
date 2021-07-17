@@ -6,6 +6,7 @@ import { resetUserData } from './redux/quiz';
 
 const Ranking = (props) => {
     const userAllData = useSelector(state => state.quiz.userAllData);
+    const userName = useSelector(state => state.quiz.userName)
     const dispatch = useDispatch();
     const [sortedUserData, setSortedUserData] = useState([]);
     const reset = () => {
@@ -13,8 +14,13 @@ const Ranking = (props) => {
         props.history.push('/');
     }
     useEffect(() => {
+        let myRanking = 0;
         const tempArray = userAllData.sort((a, b) => b.userScore - a.userScore)
         setSortedUserData(tempArray);
+        tempArray.map((v,i) => {
+            if(v.userName === userName) myRanking = i;
+        })
+        window.scrollTo({top:50+ (121 * myRanking ), behavior:"smooth"});
     }, [sortedUserData])
 
     return (
@@ -44,7 +50,6 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 100vh;
     text-align: center;
 `;
 

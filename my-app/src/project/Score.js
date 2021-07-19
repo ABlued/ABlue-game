@@ -1,24 +1,38 @@
 import React, { useState, useEffect } from 'react'
-import img from './img.jpg'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
 import { userScored } from './redux/quiz';
+import { firestore } from './firebase';
+import Spinner from './Spinner';
 
 const Score = () =>{
+    const listDB = firestore.collection("list");
+
     const list = useSelector(state => state.quiz.list);
     const userAnswer = useSelector(state => state.quiz.userAnswer);
     const myName = useSelector(state => state.quiz.myName);
     const scoreMsg = useSelector(state => state.quiz.scoreMsg);
     const [myScore, setMyScore] = useState(0);
     const [myMsg, setMyMsg] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     useEffect(() => {
         let count = 0;
-        for(let i = 0; i < list.length; i++){
-            if(list[i].answer === userAnswer[i]) count++;
-        }
-        setMyScore((count / list.length) * 100);
+        listDB.get().then((docs) => {
+            let i = 0;
+            docs.forEach((doc) => {
+                if(doc.exists){
+                    if(doc.data().answer === userAnswer[i]) count++;
+                    i++;
+                }
+            })
+            setMyScore(Math.floor((count / userAnswer.length) * 100));
+            setIsLoading(true);
+        })
+        // for(let i = 0; i < list.length; i++){
+        //     if(list[i].answer === userAnswer[i]) count++;
+        // }
         dispatch(userScored(myScore));
         if(0 <= myScore && myScore < 34 ){
             setMyMsg(scoreMsg[0]);
@@ -30,15 +44,22 @@ const Score = () =>{
     }, [myScore])
     return (
         <ScoreContainer>
-            <Text><MyName>{myName}</MyName> 퀴즈에 <br/> 대한 내 점수는?</Text>
-            <MyPoint>
-                <span>{myScore}</span>점
-                <p>{myMsg}</p>
-            </MyPoint>
-            
-            <Link to = "/message" >
-                <PointButton>메세지보내고 랭킹보기</PointButton>
-            </Link>
+            {
+                (!isLoading)?
+                <Spinner text={'점수를 계산중입니다.'}/>
+                :
+                <>
+                    <Text><MyName>{myName}</MyName> 퀴즈에 <br/> 대한 내 점수는?</Text>
+                    <MyPoint>
+                        <span>{myScore}</span>점
+                        <p>{myMsg}</p>
+                    </MyPoint>
+                    
+                    <Link to = "/message" >
+                        <PointButton>메세지보내고 랭킹보기</PointButton>
+                    </Link>
+                </>
+            }
             
         </ScoreContainer>
     )

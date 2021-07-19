@@ -1,9 +1,12 @@
 import React, { memo, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import TinderCard from 'react-tinder-card'
-import img from "./img.jpg";
-const SwipeItem = memo(({ onSwipe }) => { 
 
+const SwipeItem = memo(({ top, onSwipe }) => { 
+
+    const imgSrc = useSelector(state => state.quiz.imgsrc);
+    
     const swipe_div = useRef(null);
     let swipe_status = "ready";
     let target_classname = "";  // 애니메이팅 효과를 주기위한 클래스네임
@@ -14,6 +17,7 @@ const SwipeItem = memo(({ onSwipe }) => {
         end_y: 0,
     }
     useEffect(() => {
+
         const reset = () => {
             swipe_status = "ready";
             coordinate = {
@@ -103,9 +107,9 @@ const SwipeItem = memo(({ onSwipe }) => {
         }
     }, []);
     return (
-        <DragItem ref={swipe_div}>
+        <DragItem top={top} ref={swipe_div}>
             <div>
-                <img src={img}/>
+                <img src={imgSrc}/>
             </div>
         </DragItem>
     );
@@ -119,11 +123,10 @@ const DragItem = styled.div`
     align-items: center;
     justify-content: center;
     position: fixed;
-    top: 0;
+    top: ${props => props.top};
     left: 0;
     width: 100vw;
     height: 100vh;
-
     &.swipe {
     transition: 300ms;
     }

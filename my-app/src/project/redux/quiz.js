@@ -1,37 +1,18 @@
-/**  README
- *   
- * quiz.js와 Quiz.js가 한 폴더안에 존재할 수 없어서 서로 다른 폴더에 있습니다.
- * 
- * 폴더구조
- * src
- * ㄴ index.js
- * ㄴ App.css
- * ㄴ index.css
- * ㄴ project
- *      ㄴ redux
- *          ㄴ configStore.js
- *          ㄴ quiz.js
- *      ㄴ App.js
- *      ㄴ img.jpg
- *      ㄴ Message.js
- *      ㄴ Quiz.js
- *      ㄴ Score.js
- *      ㄴ start.js
- *      ㄴ SwipeItem.js
- * 
- * 
- */
-// list.js
+import { firestore } from '../firebase';
 
 // Actions      (액션명은 대문자)
 const LISTLOAD   = 'list/LOAD';
+const IMAGELOAD = 'image/LOAD';
 const NAMECREATE = 'username/CREATE';
 const PUSHANSWER = 'useranswer/PUSH';
 const PUSHSCORE = 'userscore/push'
 const PUSHCOMMENT = 'usercomment/push'
 const SAVEUSERDATA = 'user/push';
 const RESET = 'reset';
+const LOADUSERALLDATA = 'useralldata/LOAD'
 
+// firebase collection
+const userAllDataDB = firestore.collection("userAllData");
 // initialState
 const initialState = {
     list: [
@@ -48,24 +29,20 @@ const initialState = {
     ],
     myName: 'ABlue',
     userAllData : [
-        {userName:"치즈그라탕", userScore:'60', userComment:'코딩 최고!' },
-        {userName:"ABlue베프", userScore:'100', userComment:'앞으로도 영원하자!' },
-        {userName:"치즈그라탕", userScore:'60', userComment:'코딩 최고!' },
-        {userName:"ABlue베프", userScore:'100', userComment:'앞으로도 영원하자!' },
-        {userName:"치즈그라탕", userScore:'60', userComment:'코딩 최고!' },
-        {userName:"ABlue베프", userScore:'100', userComment:'앞으로도 영원하자!' },
-        {userName:"치즈그라탕", userScore:'60', userComment:'코딩 최고!' },
-        {userName:"ABlue베프", userScore:'100', userComment:'앞으로도 영원하자!' },
     ],
     userName : '',
     userAnswer : [],
     userComment : '',
     userScore : 0,
+    imgsrc : '',
 }
 
 // Action Creators
 export const loadList = (list) => {
     return { type: LISTLOAD, list };
+}
+export const loadImage = (src) => {
+    return { type: IMAGELOAD, src };
 }
 export const userNamed = (userName) => {
     return { type: NAMECREATE, userName}
@@ -85,12 +62,17 @@ export const saveUserData = (userName, userScore, userComment) => {
 export const resetUserData = () => {
     return { type: RESET }
 }
-
+export const loadUserAllData = () => {
+    return { type: LOADUSERALLDATA }
+}
 // Reducer
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case "list/LOAD": {
         return state;
+    }
+    case "image/LOAD": {
+        return {...state , imgsrc: action.src}
     }
     case "username/CREATE": {
         const newName = action.userName;
@@ -116,6 +98,7 @@ export default function reducer(state = initialState, action = {}) {
             newArray.push(state.userAllData[i]);
         }
         newArray.push(obj);
+        userAllDataDB.add({userName:action.userName, userScore:action.userScore, userComment:action.userComment})
         return{ ...state, userAllData: newArray };
     }
     case "reset" : {
@@ -125,6 +108,19 @@ export default function reducer(state = initialState, action = {}) {
                 userComment : '',
                 userScore : 0, 
         };
+    }
+    case "useralldata/LOAD" : {
+        let tempArray = [];
+        userAllDataDB.get().then((docs) => {
+            docs.forEach((doc) => {
+                if(doc.exists){
+                    tempArray = [...tempArray, {...doc.data()}];
+                }
+            })
+        }).then(response => {
+            tempArray = tempArray.sort((a, b) => b.userScore - a.userScore);
+        })
+        return {...state, userAllData: tempArray };
     }
     // do reducer stuff
     default: return state;

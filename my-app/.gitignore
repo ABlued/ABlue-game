@@ -9,6 +9,7 @@
 /src/redux
 /src/route
 /src/keyframe
+/src/project/firebase.js
 # testing
 /coverage
 

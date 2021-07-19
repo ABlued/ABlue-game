@@ -1,11 +1,12 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from "styled-components";
-import img from './img.jpg'
-import { saveUserData, userCommentd } from './redux/quiz';
+import { saveUserData, userCommentd, loadImage } from './redux/quiz';
+import { firestore } from './firebase';
 
 const Message = (props) => {
+    const imageDB = firestore.collection("image");
 
     const textArea = useRef('');
     const dispatch = useDispatch();
@@ -13,6 +14,8 @@ const Message = (props) => {
     const userName = useSelector(state => state.quiz.userName)
     const userScore = useSelector(state => state.quiz.userScore)
     const userAllData = useSelector(state => state.quiz.userAllData)
+    const [imgSrc, setImgSrc] = useState('');            
+
     const onSubmitEvent = (e) => {
         e.preventDefault();
         const comment = textArea.current.value;
@@ -22,19 +25,17 @@ const Message = (props) => {
         props.history.push('/ranking');
     }
     useEffect(() => {
-        console.log(userName);
-        console.log(userScore);
-        console.log(userAllData);
-        
-        return () => {
-        }
+        imageDB.doc("imagevalue").get().then((doc) => {
+            setImgSrc(doc.data().imagesrc);
+            dispatch(loadImage(imgSrc));
+        });        
     }, [userAllData])
     return (
         <Container>
-            <img src={img}></img>
+            <img src={imgSrc}></img>
             <form>
                 <Text><MyName>{myName}</MyName>에게 남기는 한 마디</Text>
-                <Textarea ref={textArea} rows="10" cols="40" placeholder="ABlue에게 하고 싶은 말을 남겨주세요."></Textarea>
+                <Textarea ref={textArea} rows="5" cols="30" placeholder="ABlue에게 하고 싶은 말을 남겨주세요."></Textarea>
                 <Button onClick={onSubmitEvent}>랭킹보기</Button>
             </form>
 

@@ -57,32 +57,16 @@ const Quiz = ({ history }) =>{
             <p><span>{num + 1}번문제</span></p>            
             {quizData.map((v,i) => {
                 if(num === i){
-
-                    if(v.imgsrc){
-                      return (
-                        <>
-                          <Img src={v.imgsrc}/>
-                          <Question key={i}>{v.question}</Question>
-                          <ImageAnswerZone>
-                            <ImageAnswer>O</ImageAnswer>
-                            <ImageAnswer>X</ImageAnswer>
-                          </ImageAnswerZone>
-                          <SwipeItem top={'150px'}key={i} onSwipe={onSwipe}></SwipeItem>
-                        </>
-                      )
-
-                    } else {
-                      return (
-                        <>
-                          <Question key={i}>{v.question}</Question>
-                          <AnswerZone>
-                            <Answer>O</Answer>
-                            <Answer>X</Answer>
-                          </AnswerZone>
-                          <SwipeItem key={i} onSwipe={onSwipe}></SwipeItem>
-                        </>
-                      )
-                    }
+                  return (
+                    <>
+                      <Question key={i}>{v.question}</Question>
+                      <AnswerZone>
+                        <Answer>O</Answer>
+                        <Answer>X</Answer>
+                      </AnswerZone>
+                      <SwipeItem key={i} onSwipe={onSwipe}></SwipeItem>
+                    </>
+                  )
                 }
             })}
           </>

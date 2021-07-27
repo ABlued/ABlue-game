@@ -2,10 +2,8 @@
 
 # :dog: ABlue맞추기게임 미니게임 
 
-##### 안녕하세요 웹뿌링클치킨이 아니라 웹뿌론트엔드가 되고싶은 삐약삐약 주니어치킨개발자 ABlued입니다!
-  
-    
-react, redux, firebase, aws를 사용한 모바일 게임 ABlue맞추기게임에 대해 소개해드리겠습니다.
+##### 안녕하세요 ABlued입니다.  
+##### react, redux, firebase, aws를 사용한 모바일 게임 ABlue맞추기게임에 대해 소개해드리겠습니다.
   
   
   

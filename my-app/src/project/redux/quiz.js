@@ -1,7 +1,6 @@
 import { firestore } from '../firebase';
 
 // Actions      (액션명은 대문자)
-const LISTLOAD   = 'list/LOAD';
 const IMAGELOAD = 'image/LOAD';
 const NAMECREATE = 'username/CREATE';
 const PUSHANSWER = 'useranswer/PUSH';
@@ -15,13 +14,6 @@ const LOADUSERALLDATA = 'useralldata/LOAD'
 const userAllDataDB = firestore.collection("userAllData");
 // initialState
 const initialState = {
-    list: [
-        { question: "민트초코를 좋아한다.", answer: "O" },
-        { question: "강아지와 고양이 중 고양이를 더 좋아한다.", answer: "X" },
-        { question: "이번 정보처리기사 실기시험에 합격했다.", answer: "O" },
-        { question: "프론트엔드가 꿈이다.", answer: "O" },
-        { question: "친구가 탕수육소스를 부어버리면 화를 낸다.", answer: "X" },
-    ],
     scoreMsg : [
         "조금이라도 저에게 관심좀 주세요 ㅠㅡㅠ",
         "조금만 더 노력하면 아주 친한 친구 사이가 될 수 있어요!",
@@ -38,9 +30,6 @@ const initialState = {
 }
 
 // Action Creators
-export const loadList = (list) => {
-    return { type: LISTLOAD, list };
-}
 export const loadImage = (src) => {
     return { type: IMAGELOAD, src };
 }
@@ -68,9 +57,6 @@ export const loadUserAllData = () => {
 // Reducer
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case "list/LOAD": {
-        return state;
-    }
     case "image/LOAD": {
         return {...state , imgsrc: action.src}
     }
@@ -126,4 +112,3 @@ export default function reducer(state = initialState, action = {}) {
     default: return state;
   }
 }
-
